@@ -1,0 +1,18 @@
+{
+	"version": "0.2.0",
+	"console": "internalConsole",
+	"configurations": [
+		{
+			"command": "npx expo start --tunnel",
+			"name": "start",
+			"request": "launch",
+			"type": "node-terminal"
+		},
+		{
+			"command": "npx eas build -p android --profile production",
+			"name": "build apk",
+			"request": "launch",
+			"type": "node-terminal"
+		}
+	]
+}
