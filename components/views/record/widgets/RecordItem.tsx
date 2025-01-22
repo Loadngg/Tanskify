@@ -6,17 +6,18 @@ import { Shadow } from 'react-native-shadow-2'
 interface Props {
 	description: string
 	value: Date
-	prevValue: Date | null
+	nextValue: Date | null
 	handleDeleteAlert: () => Promise<void>
 }
+
 export default function RecordItem({
 	description,
 	value,
-	prevValue,
+	nextValue,
 	handleDeleteAlert,
 }: Props) {
 	const date = new Date(value)
-	const prevDate = prevValue ? new Date(prevValue) : null
+	const nextDate = nextValue ? new Date(nextValue) : new Date()
 
 	const formattedDate = useMemo((): string => {
 		return date.toLocaleDateString('ru-RU', {
@@ -29,18 +30,13 @@ export default function RecordItem({
 	}, [date])
 
 	const daysBetweenDates = useMemo((): number => {
-		if (!prevDate) {
-			return 0
-		}
+		const nextTime = nextDate.getTime()
+		const time = date.getTime()
 
-		const time1 = prevDate.getTime()
-		const time2 = date.getTime()
+		const timeDifferenceMs = Math.abs(nextTime - time)
 
-		const diffInMilliseconds = Math.abs(time2 - time1)
-		const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24))
-
-		return diffInDays
-	}, [prevDate, date])
+		return Math.floor(timeDifferenceMs / (1000 * 60 * 60 * 24))
+	}, [value, nextValue])
 
 	return (
 		<Shadow
@@ -53,11 +49,9 @@ export default function RecordItem({
 			<TouchableOpacity style={styles.card} onLongPress={handleDeleteAlert}>
 				{description && <Text style={styles.description}>{description}</Text>}
 				<Text style={styles.date}>{formattedDate}</Text>
-				{prevDate && (
-					<Text style={styles.countPastDays}>
-						Дней пройдено: {daysBetweenDates}
-					</Text>
-				)}
+				<Text style={styles.countPastDays}>
+					Дней пройдено: {daysBetweenDates}
+				</Text>
 			</TouchableOpacity>
 		</Shadow>
 	)

@@ -25,12 +25,11 @@ export default function RecordsList({
 			.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 	}, [records, folderId])
 
-	const reversedData = useMemo(() => filteredData.toReversed(), [filteredData])
-
-	const findPrevDate = useCallback(
+	const findNextDate = useCallback(
 		(date: Date) => {
-			if (reversedData.length === 0 || reversedData.length === 1) return null
-			const targetIndex = reversedData.findIndex(
+			if (filteredData.length === 0 || filteredData.length === 1) return null
+
+			const targetIndex = filteredData.findIndex(
 				item => new Date(item.date).getTime() === new Date(date).getTime()
 			)
 
@@ -38,9 +37,9 @@ export default function RecordsList({
 				return null
 			}
 
-			return records[targetIndex - 1].date
+			return new Date(filteredData[targetIndex - 1].date)
 		},
-		[reversedData]
+		[filteredData]
 	)
 
 	const deleteFolderCallback = async (recordId: string) => {
@@ -71,7 +70,7 @@ export default function RecordsList({
 				<RecordItem
 					description={item.description}
 					value={item.date}
-					prevValue={findPrevDate(item.date)}
+					nextValue={findNextDate(item.date)}
 					handleDeleteAlert={() => handleDeleteAlert(item.id)}
 				/>
 			)}

@@ -42,7 +42,7 @@ export default function RecordsCreateModal({
 	const handleCreate = async () => {
 		const newRecord: IRecord = {
 			id: Date.now().toString(),
-			date: date,
+			date: new Date(date),
 			folderId: folderId,
 			description: description,
 		}
@@ -86,7 +86,7 @@ export default function RecordsCreateModal({
 				/>
 			}
 		>
-			<Text style={{ width: '100%', color: Colors.light }}>
+			<Text style={{ width: '100%', color: Colors.light, textAlign: 'center' }}>
 				{formattedDate}
 			</Text>
 			<TextButton
